@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import {Application, Graphics} from 'pixi.js';
+import {Application, Sprite, Assets, Container} from 'pixi.js';
 const app = new Application();
 
 async function setup(){
@@ -12,36 +12,46 @@ async function setup(){
     height: window.innerHeight,
     backgroundColor: '#1099bb',
     resolution: window.devicePixelRatio || 1,
-    antialias: true,
+    antialias: true, // 抗鋸齒
   });
   document.body.appendChild(app.canvas);
 }
 
-async function newGraphics(){
-  const rectangle = new Graphics();
-  rectangle.rect(0, 0, 100, 64);
-  rectangle.fill({color: '#66ccff'});
-  rectangle.stroke({width:5, color:'#ffff00', alpha:1});
-  // 縮放
-  // rectangle.scale.set(2, 2);
+async function newTexture(){
+  // 載入多個資源(texture)
+  const assets = [
+    {alias: 'bon1', src:'./textures/Icon14_17.png'},
+    {alias: 'bon2', src:'./textures/bonbon.png'},
+  ];
+  await Assets.load(assets);
+  // 建立 層級
+  const container = new Container();
+  // 建立一個 sprite
+  const bon1 = Sprite.from('bon1');
 
-  rectangle.position.set(100, 100);
+  bon1.anchor.set(0.5, 0.5)
+
+  bon1.x = app.screen.width /2;
+  bon1.y = app.screen.height /2;
+  container.addChild(bon1);
+  // app.stage.addChild(bon1);
+
+  // 建立動畫
+  app.ticker.add((time) => {
+    bon1.rotation += 0.01 * time.deltaTime;
+  });
+
+  const bon2 = Sprite.from('bon2');
+  bon2.scale.set(0.1);
+  container.addChild(bon2);
+
+  app.stage.addChild(container);
   
-  // rectangle.rotation = 0.5;
-
-  // rectangle.pivot.set(50, 32);
-  app.stage.addChild(rectangle);
-
-  const rectangle2 = new Graphics();
-  rectangle2.circle(0, 0, 50);
-  rectangle2.fill({color: '#66ccff'});
-  rectangle2.position.set(300, 200);
-  app.stage.addChild(rectangle2);
 }
 
 (async ()=>{
   await setup();
-  await newGraphics();
+  await newTexture();
 })()
 
 
