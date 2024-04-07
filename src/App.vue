@@ -19,7 +19,7 @@ async function setup(){
 
 async function newTexture(){
   // 載入多個資源(texture)
-  const assets = [
+  const assets = [ 
     {alias: 'bon1', src:'./textures/Icon14_17.png'},
     {alias: 'bon2', src:'./textures/bonbon.png'},
   ];
@@ -42,7 +42,10 @@ async function newTexture(){
   });
 
   const bon2 = Sprite.from('bon2');
-  bon2.scale.set(0.1);
+  bon2.scale.set(0.3);
+  bon2.anchor.set(0.5, 0.5)
+  bon2.x = 100;
+  bon2.y = 100;
   container.addChild(bon2);
 
   app.stage.addChild(container);
